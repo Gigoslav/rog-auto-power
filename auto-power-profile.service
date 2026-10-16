@@ -1,0 +1,14 @@
+[Unit]
+Description=Auto Power Profile and Display Refresh Rate Switcher
+PartOf=graphical-session.target
+After=graphical-session.target plasma-kscreen.service
+
+[Service]
+Type=simple
+ExecStart=/home/gigs/.local/bin/auto-power-profile.py
+Restart=always
+RestartSec=5
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=graphical-session.target

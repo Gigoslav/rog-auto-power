@@ -1,0 +1,15 @@
+#!/bin/bash
+set -e
+case "$1" in
+  AsusMuxDgpu)
+    echo 0 > /sys/devices/platform/asus-nb-wmi/gpu_mux_mode
+    ;;
+  Hybrid|Integrated)
+    sed -i "s/\"mode\": \"[^\"]*\"/\"mode\": \"$1\"/" /etc/supergfxd.conf
+    echo 1 > /sys/devices/platform/asus-nb-wmi/gpu_mux_mode
+    ;;
+  *)
+    echo "Usage: $0 {AsusMuxDgpu|Hybrid|Integrated}" >&2
+    exit 1
+    ;;
+esac
