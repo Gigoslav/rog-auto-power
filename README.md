@@ -47,7 +47,12 @@ yay -S supergfxctl
 sudo systemctl enable --now supergfxd switcheroo-control
 ```
 
-### Install Service & Helper
+### One-Line Install on Arch / EndeavourOS / CachyOS / Manjaro (via `makepkg`)
+```bash
+git clone https://github.com/Gigoslav/rog-auto-power.git && cd rog-auto-power && makepkg -si && ./install.sh
+```
+
+### Manual Install Service & Helper
 ```bash
 chmod +x install.sh
 ./install.sh
