@@ -1,4 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Marcel Berghaus (Gigoslav) <berghaus.marcel@gmail.com>
+# Project: https://github.com/Gigoslav/rog-auto-power
+#
+# Selective root helper for ASUS ROG Strix GPU/MUX switching, battery charge
+# threshold control, and hardware power-saving sysfs tunables.
+
 set -e
 
 set_pci_pm() {

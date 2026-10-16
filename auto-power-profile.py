@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Marcel Berghaus (Gigoslav) <berghaus.marcel@gmail.com>
+# Project: https://github.com/Gigoslav/rog-auto-power
 """
-Auto Power Profile, Display Refresh Rate Switcher & Live Wattage Tray Indicator
+ROG Auto-Power & Live Wattage Tray Indicator (rog-auto-power)
 - AC (Barrel Plug):    Performance profile + 240 Hz
 - USB-C PD Charger:    Balanced profile    + 60 Hz
 - Battery (Unplugged): Power-saver profile + 60 Hz
@@ -19,6 +22,13 @@ import argparse
 
 import dbus
 from dbus.mainloop.glib import DBusGMainLoop
+
+APP_NAME = "rog-auto-power"
+APP_VERSION = "0.1.1"
+APP_AUTHOR = "Marcel Berghaus (Gigoslav)"
+APP_EMAIL = "berghaus.marcel@gmail.com"
+APP_URL = "https://github.com/Gigoslav/rog-auto-power"
+APP_LICENSE = "GPL-3.0-or-later"
 
 
 def detect_language() -> str:
@@ -100,6 +110,9 @@ I18N = {
         "cli_bat": "├── Davon Akku:  {sign}{w:.2f} W ({c:.2f} C) [{st}] (Akku: {cap}% / Limit: {lim}%)",
         "cli_sys": "└── Davon System:{w:6.2f} W (CPU/iGPU: {apu:.1f}W | RTX 3060: {dgpu:.1f}W [{dst}] | Display/Board: {rest:.1f}W)",
         "cli_prof": "Aktives Profil:  {prof}",
+        "menu_about": "ℹ️ Über & Credits (v{ver} • Gigoslav)",
+        "about_title": "⚡ ROG Auto-Power v{ver}",
+        "about_msg": "Entwickelt von {author} • Lizenz: {lic} • {url}",
     },
     "en": {
         "bat_label": "Battery (Unplugged)",
@@ -162,6 +175,9 @@ I18N = {
         "cli_bat": "├── Battery:     {sign}{w:.2f} W ({c:.2f} C) [{st}] (Level: {cap}% / Limit: {lim}%)",
         "cli_sys": "└── System Load: {w:6.2f} W (CPU/iGPU: {apu:.1f}W | RTX 3060: {dgpu:.1f}W [{dst}] | Display/Board: {rest:.1f}W)",
         "cli_prof": "Active Profile:  {prof}",
+        "menu_about": "ℹ️ About & Credits (v{ver} • Gigoslav)",
+        "about_title": "⚡ ROG Auto-Power v{ver}",
+        "about_msg": "Created by {author} • License: {lic} • {url}",
     },
 }
 
@@ -821,6 +837,22 @@ def run_gui_daemon(controller: PowerManagerController):
     act_lim_100.triggered.connect(lambda: set_charge_limit(100, tr("lbl_lim_100")))
     menu.addAction(act_lim_100)
 
+    menu.addSeparator()
+
+    def show_about():
+        send_notification(
+            tr("about_title", ver=APP_VERSION),
+            tr("about_msg", author=APP_AUTHOR, lic=APP_LICENSE, url=APP_URL),
+        )
+        try:
+            subprocess.Popen(["xdg-open", APP_URL], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except Exception:
+            pass
+
+    act_about = QAction(tr("menu_about", ver=APP_VERSION), menu)
+    act_about.triggered.connect(show_about)
+    menu.addAction(act_about)
+
     tray.setContextMenu(menu)
 
     tick_count = 0
@@ -925,7 +957,12 @@ def run_gui_daemon(controller: PowerManagerController):
 
 def main():
     global LANG
-    parser = argparse.ArgumentParser(description="Auto Power Profile & Refresh Rate Switcher")
+    parser = argparse.ArgumentParser(
+        prog=APP_NAME,
+        description="ASUS ROG Strix Auto Power Profile, Refresh Rate Switcher & Live Wattage Tray Indicator",
+        epilog=f"Created by {APP_AUTHOR} <{APP_EMAIL}> ({APP_URL})",
+    )
+    parser.add_argument("-v", "--version", action="store_true", help="Print version, copyright and license information")
     parser.add_argument("--once", action="store_true", help="Apply current settings once and exit")
     parser.add_argument("--status", action="store_true", help="Print current status and detection")
     parser.add_argument("--lang", choices=["de", "en"], help="Override display language (de/en)")
@@ -933,6 +970,15 @@ def main():
 
     if args.lang:
         LANG = args.lang
+
+    if args.version:
+        print(f"{APP_NAME} {APP_VERSION}")
+        print(f"Copyright (C) 2026 {APP_AUTHOR} <{APP_EMAIL}>")
+        print(f"License: {APP_LICENSE} <https://www.gnu.org/licenses/gpl-3.0.html>")
+        print(f"Repository: {APP_URL}")
+        print("This is free software: you are free to change and redistribute it under the terms of the GPLv3+.")
+        print("Author attribution and copyright notices must be preserved in all copies and derivatives.")
+        return
 
     if args.status:
         src = get_power_source()

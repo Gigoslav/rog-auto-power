@@ -1,11 +1,15 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Marcel Berghaus (Gigoslav) <berghaus.marcel@gmail.com>
+
 [Unit]
-Description=Auto Power Profile and Display Refresh Rate Switcher
+Description=ASUS ROG Auto Power Profile, Refresh Rate Switcher & Live Wattage Tray Indicator
+Documentation=https://github.com/Gigoslav/rog-auto-power
 PartOf=graphical-session.target
 After=graphical-session.target plasma-kscreen.service
 
 [Service]
 Type=simple
-ExecStart=/home/gigs/.local/bin/auto-power-profile.py
+ExecStart=%h/.local/bin/auto-power-profile.py
 Restart=always
 RestartSec=5
 Environment=PYTHONUNBUFFERED=1

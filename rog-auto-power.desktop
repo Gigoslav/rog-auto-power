@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=ROG Auto-Power & Watt Indicator
+Name[de]=ROG Auto-Power & Watt-Anzeige
+GenericName=ASUS ROG Power & GPU Tray Manager
+GenericName[de]=ASUS ROG Energie- & GPU-Tray-Manager
+Comment=3-state auto power profile, 60/240Hz refresh rate switcher, live Wattage tray badge & GPU/MUX switcher
+Comment[de]=Automatische 3-Stufen-Energieprofile, 60/240Hz Umschalter, Live-Watt-Tray-Anzeige & GPU/MUX-Umschalter
+Exec=auto-power-profile.py
+Icon=battery-good-charging
+Terminal=false
+Categories=System;HardwareSettings;Monitor;Qt;KDE;
+Keywords=ASUS;ROG;Power;Battery;Watt;MUX;GPU;supergfxctl;
+StartupNotify=false
