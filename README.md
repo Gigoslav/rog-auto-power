@@ -97,5 +97,6 @@ auto-power-profile.py --once
 ## 👤 Author, Credits & License
 
 * **Author & Maintainer:** **Marcel Berghaus ([Gigoslav](https://github.com/Gigoslav))** — `<berghaus.marcel@gmail.com>`
+* **Website:** **[https://lexchaos.de](https://lexchaos.de)**
 * **License:** Licensed under the **GNU General Public License v3.0 or later (`GPL-3.0-or-later`)** — see [LICENSE](LICENSE) and [NOTICE](NOTICE).
-* **Attribution Requirement (GPLv3 §7b):** All copies, packages, forks, or derivative works **must** retain the original copyright notice, author attribution (`Marcel Berghaus / Gigoslav`), and repository link.
+* **Attribution Requirement (GPLv3 §7b):** All copies, packages, forks, or derivative works **must** retain the original copyright notice, author attribution (`Marcel Berghaus / Gigoslav`), website (`https://lexchaos.de`), and repository link.

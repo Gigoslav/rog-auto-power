@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Marcel Berghaus (Gigoslav) <berghaus.marcel@gmail.com>
+# Website: https://lexchaos.de
 # Project: https://github.com/Gigoslav/rog-auto-power
 """
 ROG Auto-Power & Live Wattage Tray Indicator (rog-auto-power)
@@ -27,6 +28,7 @@ APP_NAME = "rog-auto-power"
 APP_VERSION = "0.1.2"
 APP_AUTHOR = "Marcel Berghaus (Gigoslav)"
 APP_EMAIL = "berghaus.marcel@gmail.com"
+APP_WEBSITE = "https://lexchaos.de"
 APP_URL = "https://github.com/Gigoslav/rog-auto-power"
 APP_LICENSE = "GPL-3.0-or-later"
 
@@ -115,11 +117,11 @@ I18N = {
         "cli_sys": "└── Davon System:{w:6.2f} W (CPU/iGPU: {apu:.1f}W | RTX 3060: {dgpu:.1f}W [{dst}] | Bildschirm/Mainboard: {rest:.1f}W)",
         "cli_prof": "Aktives Profil:  {prof}",
         "cli_panel": "Bildschirm:      {panel} ({res}) @ {rate} Hz",
-        "menu_about": "ℹ️ Über & Credits (v{ver} • Gigoslav)",
+        "menu_about": "ℹ️ Über & Credits (v{ver} • Gigoslav • lexchaos.de)",
         "about_title": "⚡ ROG Auto-Power v{ver}",
-        "about_msg": "Entwickelt von {author} • Lizenz: {lic} • {url}",
+        "about_msg": "Entwickelt von {author} • Web: {web} • Lizenz: {lic} • {url}",
         "ver_free": "Dies ist freie Software: Sie können sie unter den Bedingungen der GPLv3+ ändern und weitergeben.",
-        "ver_attr": "Autoren-Credits und Copyright-Hinweise müssen in allen Kopien und Ableitungen erhalten bleiben.",
+        "ver_attr": "Autoren-Credits (Marcel Berghaus / Gigoslav • lexchaos.de) müssen in allen Kopien erhalten bleiben.",
         "prof_power-saver": "Stromsparmodus",
         "prof_balanced": "Ausgeglichen",
         "prof_performance": "Höchstleistung",
@@ -196,11 +198,11 @@ I18N = {
         "cli_sys": "└── System Load: {w:6.2f} W (CPU/iGPU: {apu:.1f}W | RTX 3060: {dgpu:.1f}W [{dst}] | Display/Board: {rest:.1f}W)",
         "cli_prof": "Active Profile:  {prof}",
         "cli_panel": "Display:         {panel} ({res}) @ {rate} Hz",
-        "menu_about": "ℹ️ About & Credits (v{ver} • Gigoslav)",
+        "menu_about": "ℹ️ About & Credits (v{ver} • Gigoslav • lexchaos.de)",
         "about_title": "⚡ ROG Auto-Power v{ver}",
-        "about_msg": "Created by {author} • License: {lic} • {url}",
+        "about_msg": "Created by {author} • Web: {web} • License: {lic} • {url}",
         "ver_free": "This is free software: you are free to change and redistribute it under the terms of the GPLv3+.",
-        "ver_attr": "Author attribution and copyright notices must be preserved in all copies and derivatives.",
+        "ver_attr": "Author attribution (Marcel Berghaus / Gigoslav • lexchaos.de) must be preserved in all copies.",
         "prof_power-saver": "Power-Saver",
         "prof_balanced": "Balanced",
         "prof_performance": "Performance",
@@ -874,10 +876,10 @@ def run_gui_daemon(controller: PowerManagerController):
     def show_about():
         send_notification(
             tr("about_title", ver=APP_VERSION),
-            tr("about_msg", author=APP_AUTHOR, lic=APP_LICENSE, url=APP_URL),
+            tr("about_msg", author=APP_AUTHOR, web=APP_WEBSITE, lic=APP_LICENSE, url=APP_URL),
         )
         try:
-            subprocess.Popen(["xdg-open", APP_URL], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.Popen(["xdg-open", APP_WEBSITE], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         except Exception:
             pass
 
@@ -993,7 +995,7 @@ def main():
     parser = argparse.ArgumentParser(
         prog=APP_NAME,
         description="ASUS ROG Strix Auto Power Profile, Refresh Rate Switcher & Live Wattage Tray Indicator",
-        epilog=f"Created by {APP_AUTHOR} <{APP_EMAIL}> ({APP_URL})",
+        epilog=f"Created by {APP_AUTHOR} <{APP_EMAIL}> ({APP_WEBSITE} | {APP_URL})",
     )
     parser.add_argument("-v", "--version", action="store_true", help="Print version, copyright and license information")
     parser.add_argument("--once", action="store_true", help="Apply current settings once and exit")
@@ -1007,8 +1009,9 @@ def main():
     if args.version:
         print(f"{APP_NAME} {APP_VERSION}")
         print(f"Copyright (C) 2026 {APP_AUTHOR} <{APP_EMAIL}>")
-        print(f"License: {APP_LICENSE} <https://www.gnu.org/licenses/gpl-3.0.html>")
+        print(f"Website:    {APP_WEBSITE}")
         print(f"Repository: {APP_URL}")
+        print(f"License:    {APP_LICENSE} <https://www.gnu.org/licenses/gpl-3.0.html>")
         print(tr("ver_free"))
         print(tr("ver_attr"))
         return
