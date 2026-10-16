@@ -175,6 +175,7 @@ def get_power_telemetry(current_hz: float = 60.0) -> dict:
     energy_full_wh = 0.0
     usbc_amps = 0.0
 
+    charge_limit = 80
     try:
         with open(os.path.join(bat_dir, "status"), "r") as f:
             status = f.read().strip()
@@ -186,6 +187,10 @@ def get_power_telemetry(current_hz: float = 60.0) -> dict:
             energy_now_wh = int(f.read().strip()) / 1_000_000.0
         with open(os.path.join(bat_dir, "energy_full"), "r") as f:
             energy_full_wh = int(f.read().strip()) / 1_000_000.0
+        limit_file = os.path.join(bat_dir, "charge_control_end_threshold")
+        if os.path.exists(limit_file):
+            with open(limit_file, "r") as f:
+                charge_limit = int(f.read().strip())
     except Exception:
         pass
 
@@ -216,16 +221,20 @@ def get_power_telemetry(current_hz: float = 60.0) -> dict:
         sys_watts = apu_watts + dgpu_watts + rest_watts
         total_in_watts = bat_watts + sys_watts
     else:
-        # Full / Not charging (at 80% threshold on AC)
+        # Full / Not charging (at charge limit threshold on AC)
         rest_watts = estimated_rest
         sys_watts = apu_watts + dgpu_watts + rest_watts
         bat_watts = 0.0
         total_in_watts = sys_watts
 
+    c_rate = (bat_watts / energy_full_wh) if energy_full_wh > 0 else 0.0
+
     return {
         "status": status,
         "total_in_watts": total_in_watts,
         "bat_watts": bat_watts,
+        "c_rate": c_rate,
+        "charge_limit": charge_limit,
         "sys_watts": sys_watts,
         "apu_watts": apu_watts,
         "dgpu_state": dgpu_state,
@@ -631,6 +640,40 @@ def run_gui_daemon(controller: PowerManagerController):
     act_gpu_ded.triggered.connect(lambda: switch_gpu_mode("AsusMuxDgpu"))
     menu.addAction(act_gpu_ded)
 
+    menu.addSeparator()
+    act_bat_prot = QAction("🛡️ Akku-Schutz (Limit: 80%)", menu)
+    act_bat_prot.setEnabled(False)
+    menu.addAction(act_bat_prot)
+
+    def set_charge_limit(limit: int, label: str):
+        try:
+            subprocess.check_call(["sudo", "-n", "/usr/local/bin/rog-gpu-mux-helper", "charge-limit", str(limit)])
+            send_notification("🛡️ Akku-Schutzmodus", f"{label} aktiviert (Lade-Limit: {limit}%)")
+        except Exception as e:
+            send_notification("⚠️ Akku-Schutz Fehler", str(e))
+        update_tray()
+
+    def stop_charging_now():
+        tel_now = get_power_telemetry()
+        cur_cap = max(20, min(100, tel_now["capacity"]))
+        set_charge_limit(cur_cap, f"Laden sofort gestoppt (0.0 C Bypass bei {cur_cap}%)")
+
+    act_lim_stop = QAction("⏸️ Laden sofort stoppen (0.0 C Bypass)", menu)
+    act_lim_stop.triggered.connect(stop_charging_now)
+    menu.addAction(act_lim_stop)
+
+    act_lim_60 = QAction("🛡️ Ultra-Schutz: Max 60% (Schreibtisch)", menu)
+    act_lim_60.triggered.connect(lambda: set_charge_limit(60, "Ultra-Schutz (60%)"))
+    menu.addAction(act_lim_60)
+
+    act_lim_80 = QAction("⚖️ Standard-Schutz: Max 80% (Alltag)", menu)
+    act_lim_80.triggered.connect(lambda: set_charge_limit(80, "Standard-Schutz (80%)"))
+    menu.addAction(act_lim_80)
+
+    act_lim_100 = QAction("🎒 Reise-Modus: Max 100% (Voll)", menu)
+    act_lim_100.triggered.connect(lambda: set_charge_limit(100, "Reise-Modus (100%)"))
+    menu.addAction(act_lim_100)
+
     tray.setContextMenu(menu)
 
     tick_count = 0
@@ -652,6 +695,8 @@ def run_gui_daemon(controller: PowerManagerController):
         tel = get_power_telemetry(rate_val)
         status = tel["status"]
         cap = tel["capacity"]
+        limit = tel["charge_limit"]
+        c_rate = tel["c_rate"]
         src = get_power_source()
         src_label = STATE_CONFIG[src]["label"]
 
@@ -665,19 +710,19 @@ def run_gui_daemon(controller: PowerManagerController):
         usbc_extra = f" (Max {tel['usbc_max_watts']:.0f}W)" if src == "usbc" and tel["usbc_max_watts"] > 0 else ""
 
         if status == "Charging":
-            rem_wh = max(0.0, tel["energy_full_wh"] * 0.80 - tel["energy_now_wh"])
-            eta = f"~{rem_wh / bat_w:.1f}h bis 80%" if bat_w > 1.0 and rem_wh > 0 else "Fast 80%"
+            rem_wh = max(0.0, tel["energy_full_wh"] * (limit / 100.0) - tel["energy_now_wh"])
+            eta = f"~{rem_wh / bat_w:.1f}h bis {limit}%" if bat_w > 1.0 and rem_wh > 0 else f"Fast {limit}%"
             line_in = f"🔌 Gesamt IN:   {total_in:5.1f} W  [{src_label}{usbc_extra}]"
-            line_bat = f"├── 🔋 Akku:   +{bat_w:5.1f} W  (Lädt • {cap}% • {eta})"
+            line_bat = f"├── 🔋 Akku:   +{bat_w:5.1f} W  ({c_rate:.2f} C • Lädt • {cap}%/{limit}% • {eta})"
             line_sys = f"└── 💻 System:  {sys_w:5.1f} W  (Laufender Betrieb)"
         elif status == "Discharging":
             eta = f"~{tel['energy_now_wh'] / bat_w:.1f}h Rest" if bat_w > 1.0 else ""
             line_in = f"🔌 Gesamt IN:     0.0 W  [Kein Netzteil]"
-            line_bat = f"├── 🔋 Akku:   -{bat_w:5.1f} W  (Entlädt • {cap}% • {eta})"
+            line_bat = f"├── 🔋 Akku:   -{bat_w:5.1f} W  ({c_rate:.2f} C • Entlädt • {cap}% • {eta})"
             line_sys = f"└── 💻 System:  {sys_w:5.1f} W  (Aus dem Akku)"
         else:
             line_in = f"🔌 Gesamt IN:   {total_in:5.1f} W  [{src_label}{usbc_extra}]"
-            line_bat = f"├── 🔋 Akku:      0.0 W  ({cap}% • Limit erreicht)"
+            line_bat = f"├── 🔋 Akku:      0.0 W  (0.00 C • {cap}% • Bypass bei {limit}% Limit)"
             line_sys = f"└── 💻 System:  {sys_w:5.1f} W  (Direkt vom Netzteil)"
 
         line_detail = f"       ↳ CPU/iGPU: {apu_w:.1f}W | RTX 3060: {dgpu_w:.1f}W | Display/Rest: {rest_w:.1f}W"
@@ -690,6 +735,7 @@ def run_gui_daemon(controller: PowerManagerController):
         act_sys_detail.setText(line_detail)
         act_state.setText(f"⚙️ Profil: {prof} | {panel_name} @ {rate_str}")
         act_gpu_status.setText(f"🎮 GPU-Modus: {cached_gpu_mode}")
+        act_bat_prot.setText(f"🛡️ Akku-Schutz: Limit {limit}% ({c_rate:.2f} C)")
 
         tooltip = (
             f"⚡ Energie-Bilanz (Live)\n"
@@ -698,6 +744,7 @@ def run_gui_daemon(controller: PowerManagerController):
             f"{line_sys}\n"
             f"{line_detail}\n"
             f"──────────────────────────\n"
+            f"🛡️ Akku-Limit: {limit}% | Rate: {c_rate:.2f} C\n"
             f"⚙️ Profil: {prof} | Display: {rate_str}\n"
             f"🎮 GPU: {cached_gpu_mode}"
         )
@@ -745,7 +792,7 @@ def main():
         print("=== AutoPower & Energie-Bilanz ===")
         print(f"Power Source:    {cfg['label']}")
         print(f"Gesamt IN:       {tel['total_in_watts']:.2f} W")
-        print(f"├── Davon Akku:  {sign}{tel['bat_watts']:.2f} W [{tel['status']}] (Akku: {tel['capacity']}%)")
+        print(f"├── Davon Akku:  {sign}{tel['bat_watts']:.2f} W ({tel['c_rate']:.2f} C) [{tel['status']}] (Akku: {tel['capacity']}% / Limit: {tel['charge_limit']}%)")
         print(f"└── Davon System:{tel['sys_watts']:6.2f} W (CPU/iGPU: {tel['apu_watts']:.1f}W | RTX 3060: {tel['dgpu_watts']:.1f}W [{tel['dgpu_state']}] | Display/Board: {tel['rest_watts']:.1f}W)")
         print(f"Current Profile: {current_prof}")
         print(f"Panel:           {panel_name} ({current_res}) @ {current_rate} Hz")

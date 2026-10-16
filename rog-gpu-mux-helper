@@ -18,6 +18,15 @@ case "$1" in
     sed -i "s/\"mode\": \"[^\"]*\"/\"mode\": \"$1\"/" /etc/supergfxd.conf
     echo 1 > /sys/devices/platform/asus-nb-wmi/gpu_mux_mode
     ;;
+  charge-limit)
+    val="$2"
+    if [[ "$val" =~ ^[0-9]+$ ]] && [ "$val" -ge 20 ] && [ "$val" -le 100 ]; then
+      echo "$val" > /sys/class/power_supply/BAT0/charge_control_end_threshold
+    else
+      echo "Invalid threshold (must be 20-100)" >&2
+      exit 1
+    fi
+    ;;
   power-battery)
     [ -w /sys/devices/platform/asus-nb-wmi/panel_od ] && echo 0 > /sys/devices/platform/asus-nb-wmi/panel_od || true
     [ -w /sys/devices/system/cpu/cpufreq/boost ] && echo 0 > /sys/devices/system/cpu/cpufreq/boost || true
@@ -40,7 +49,7 @@ case "$1" in
     iw dev wlan0 set power_save off 2>/dev/null || true
     ;;
   *)
-    echo "Usage: $0 {AsusMuxDgpu|Hybrid|Integrated|power-battery|power-usbc|power-ac}" >&2
+    echo "Usage: $0 {AsusMuxDgpu|Hybrid|Integrated|charge-limit <20-100>|power-battery|power-usbc|power-ac}" >&2
     exit 1
     ;;
 esac
