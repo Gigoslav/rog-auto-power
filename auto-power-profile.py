@@ -24,7 +24,7 @@ import dbus
 from dbus.mainloop.glib import DBusGMainLoop
 
 APP_NAME = "rog-auto-power"
-APP_VERSION = "0.1.1"
+APP_VERSION = "0.1.2"
 APP_AUTHOR = "Marcel Berghaus (Gigoslav)"
 APP_EMAIL = "berghaus.marcel@gmail.com"
 APP_URL = "https://github.com/Gigoslav/rog-auto-power"

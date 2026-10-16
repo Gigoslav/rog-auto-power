@@ -7,7 +7,7 @@ set -e
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-echo "=== Installing ROG Auto-Power & Live Watt Indicator (v0.1.1) ==="
+echo "=== Installing ROG Auto-Power & Live Watt Indicator (v0.1.2) ==="
 
 mkdir -p ~/.local/bin ~/.config/systemd/user ~/.local/share/applications
 ln -sf "$REPO_DIR/auto-power-profile.py" ~/.local/bin/auto-power-profile.py

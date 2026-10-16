@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 pkgname=rog-auto-power-git
-pkgver=0.1.1
+pkgver=0.1.2
 pkgrel=1
 pkgdesc="ASUS ROG Strix 3-state auto power profile, 60/240Hz switcher, live Wattage (IN/Battery/System) KDE tray badge & GPU/MUX switcher"
 arch=('any')

@@ -3,7 +3,7 @@
 # Standard Linux/FHS Makefile for rog-auto-power
 
 pkgname := rog-auto-power
-VERSION := 0.1.1
+VERSION := 0.1.2
 
 PREFIX ?= /usr
 BINDIR ?= $(PREFIX)/bin

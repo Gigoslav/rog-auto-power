@@ -1,7 +1,7 @@
 # ⚡ ROG Auto-Power & Live Watt Tray Indicator (`rog-auto-power`)
 
 [![License: GPL v3+](https://img.shields.io/badge/License-GPLv3%2B-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Version](https://img.shields.io/badge/version-0.1.1-brightgreen.svg)](https://github.com/Gigoslav/rog-auto-power/releases)
+[![Version](https://img.shields.io/badge/version-0.1.2-brightgreen.svg)](https://github.com/Gigoslav/rog-auto-power/releases)
 [![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20Arch%20%7C%20KDE%20Plasma%206-informational.svg)](https://github.com/Gigoslav/rog-auto-power)
 
 Intelligent 3-state power management, display refresh-rate switching (`60 Hz` ↔ `240 Hz`), **live Wattage System-Tray indicator (`Total IN = Battery + System`)**, **Battery C-Rate & Charge-Limit Protection**, and **GPU/MUX switcher** (`supergfxctl` + `asus-nb-wmi`) for **ASUS ROG Strix (G17 G713RM)** laptops running Linux & KDE Plasma 6 (Wayland & X11).
