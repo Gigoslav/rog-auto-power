@@ -381,7 +381,7 @@ STATE_CONFIG = {
         "profile": "power-saver",
         "hz": 60,
         "brightness": 50,
-        "kbd": 0,
+        "kbd": 1,
         "label": "Battery (Akkubetrieb)",
         "title": "⚡ Akkubetrieb aktiviert",
         "msg": "Power-Saver | 60 Hz | 50% Helligkeit | Eco-Tuning",
