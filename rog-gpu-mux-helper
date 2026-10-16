@@ -1,5 +1,15 @@
 #!/bin/bash
 set -e
+
+set_pci_pm() {
+  local mode="$1"
+  for dev in 0000:02:00.0 0000:03:00.0 0000:04:00.0 0000:05:00.0 0000:06:00.0 0000:06:00.2; do
+    if [ -w "/sys/bus/pci/devices/$dev/power/control" ]; then
+      echo "$mode" > "/sys/bus/pci/devices/$dev/power/control" 2>/dev/null || true
+    fi
+  done
+}
+
 case "$1" in
   AsusMuxDgpu)
     echo 0 > /sys/devices/platform/asus-nb-wmi/gpu_mux_mode
@@ -8,8 +18,29 @@ case "$1" in
     sed -i "s/\"mode\": \"[^\"]*\"/\"mode\": \"$1\"/" /etc/supergfxd.conf
     echo 1 > /sys/devices/platform/asus-nb-wmi/gpu_mux_mode
     ;;
+  power-battery)
+    [ -w /sys/devices/platform/asus-nb-wmi/panel_od ] && echo 0 > /sys/devices/platform/asus-nb-wmi/panel_od || true
+    [ -w /sys/devices/system/cpu/cpufreq/boost ] && echo 0 > /sys/devices/system/cpu/cpufreq/boost || true
+    [ -w /proc/sys/vm/dirty_writeback_centisecs ] && echo 1500 > /proc/sys/vm/dirty_writeback_centisecs || true
+    set_pci_pm auto
+    iw dev wlan0 set power_save on 2>/dev/null || true
+    ;;
+  power-usbc)
+    [ -w /sys/devices/platform/asus-nb-wmi/panel_od ] && echo 0 > /sys/devices/platform/asus-nb-wmi/panel_od || true
+    [ -w /sys/devices/system/cpu/cpufreq/boost ] && echo 1 > /sys/devices/system/cpu/cpufreq/boost || true
+    [ -w /proc/sys/vm/dirty_writeback_centisecs ] && echo 500 > /proc/sys/vm/dirty_writeback_centisecs || true
+    set_pci_pm auto
+    iw dev wlan0 set power_save on 2>/dev/null || true
+    ;;
+  power-ac)
+    [ -w /sys/devices/platform/asus-nb-wmi/panel_od ] && echo 1 > /sys/devices/platform/asus-nb-wmi/panel_od || true
+    [ -w /sys/devices/system/cpu/cpufreq/boost ] && echo 1 > /sys/devices/system/cpu/cpufreq/boost || true
+    [ -w /proc/sys/vm/dirty_writeback_centisecs ] && echo 500 > /proc/sys/vm/dirty_writeback_centisecs || true
+    set_pci_pm auto
+    iw dev wlan0 set power_save off 2>/dev/null || true
+    ;;
   *)
-    echo "Usage: $0 {AsusMuxDgpu|Hybrid|Integrated}" >&2
+    echo "Usage: $0 {AsusMuxDgpu|Hybrid|Integrated|power-battery|power-usbc|power-ac}" >&2
     exit 1
     ;;
 esac

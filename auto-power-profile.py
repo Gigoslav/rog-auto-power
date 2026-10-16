@@ -109,17 +109,52 @@ def get_dgpu_status_and_watts() -> tuple[str, float]:
 
 
 def get_backlight_ratio() -> float:
-    """Get screen brightness ratio (0.0 to 1.0)."""
-    for b in glob.glob("/sys/class/backlight/*"):
+    """Get screen brightness ratio (0.0 to 1.0) via KDE Solid or sysfs."""
+    try:
+        bus = dbus.SessionBus()
+        obj = bus.get_object("org.kde.Solid.PowerManagement", "/org/kde/Solid/PowerManagement/Actions/BrightnessControl")
+        iface = dbus.Interface(obj, "org.kde.Solid.PowerManagement.Actions.BrightnessControl")
+        cur = float(iface.brightness())
+        mx = float(iface.brightnessMax())
+        if mx > 0:
+            return max(0.0, min(1.0, cur / mx))
+    except Exception:
+        pass
+    return 0.5
+
+
+def set_screen_and_kbd_brightness(screen_pct: int, kbd_level: int):
+    """Set screen brightness (0-100%) and keyboard backlight (0-3) via KDE Solid D-Bus."""
+    try:
+        bus = dbus.SessionBus()
+        b_obj = bus.get_object("org.kde.Solid.PowerManagement", "/org/kde/Solid/PowerManagement/Actions/BrightnessControl")
+        b_iface = dbus.Interface(b_obj, "org.kde.Solid.PowerManagement.Actions.BrightnessControl")
+        b_max = int(b_iface.brightnessMax())
+        target_b = int(round((screen_pct / 100.0) * b_max))
+        b_iface.setBrightnessSilent(target_b)
+    except Exception as e:
+        print(f"[Brightness] Failed to set screen brightness: {e}")
+
+    try:
+        bus = dbus.SessionBus()
+        k_obj = bus.get_object("org.kde.Solid.PowerManagement", "/org/kde/Solid/PowerManagement/Actions/KeyboardBrightnessControl")
+        k_iface = dbus.Interface(k_obj, "org.kde.Solid.PowerManagement.Actions.KeyboardBrightnessControl")
+        k_iface.setKeyboardBrightnessSilent(int(kbd_level))
+    except Exception as e:
+        print(f"[Brightness] Failed to set keyboard backlight: {e}")
+
+
+def apply_hardware_tunings(state: str):
+    """Run selective root helper for PCIe Runtime PM, CPU Boost, Panel Overdrive & Wi-Fi Power Save."""
+    if os.path.exists("/usr/local/bin/rog-gpu-mux-helper"):
         try:
-            with open(os.path.join(b, "brightness"), "r") as fb, open(os.path.join(b, "max_brightness"), "r") as fm:
-                cur = float(fb.read().strip())
-                mx = float(fm.read().strip())
-                if mx > 0:
-                    return max(0.0, min(1.0, cur / mx))
+            subprocess.Popen(
+                ["sudo", "-n", "/usr/local/bin/rog-gpu-mux-helper", f"power-{state}"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL
+            )
         except Exception:
             pass
-    return 0.6
 
 
 def get_power_telemetry(current_hz: float = 60.0) -> dict:
@@ -345,25 +380,31 @@ STATE_CONFIG = {
     "battery": {
         "profile": "power-saver",
         "hz": 60,
+        "brightness": 50,
+        "kbd": 0,
         "label": "Battery (Akkubetrieb)",
         "title": "⚡ Akkubetrieb aktiviert",
-        "msg": "Profil: Power-Saver | Display: 60 Hz",
+        "msg": "Power-Saver | 60 Hz | 50% Helligkeit | Eco-Tuning",
         "icon": "battery-good",
     },
     "usbc": {
         "profile": "balanced",
         "hz": 60,
+        "brightness": 75,
+        "kbd": 1,
         "label": "USB-C PD (Ladebetrieb)",
         "title": "🔌 USB-C Laden aktiviert",
-        "msg": "Profil: Balanced | Display: 60 Hz",
+        "msg": "Balanced | 60 Hz | 75% Helligkeit",
         "icon": "ac-adapter",
     },
     "ac": {
         "profile": "performance",
         "hz": 240,
+        "brightness": 100,
+        "kbd": 3,
         "label": "AC 240W (Netzbetrieb)",
         "title": "🚀 Netzbetrieb (240W) aktiviert",
-        "msg": "Profil: Performance | Display: 240 Hz",
+        "msg": "Performance | 240 Hz | 100% Helligkeit",
         "icon": "ac-adapter",
     },
 }
@@ -389,6 +430,10 @@ class PowerManagerController:
         state_changed = (self.last_state is not None and self.last_state != new_state)
         prof_changed = set_power_profile(prof)
         rate_changed = set_display_refresh_rate(hz)
+
+        if state_changed or force:
+            set_screen_and_kbd_brightness(cfg["brightness"], cfg["kbd"])
+            apply_hardware_tunings(new_state)
 
         self.cached_panel = get_panel_info()
         self.cached_profile = get_current_power_profile()
