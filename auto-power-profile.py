@@ -89,8 +89,9 @@ def get_apu_ppt_watts() -> float:
 
 def get_dgpu_status_and_watts() -> tuple[str, float]:
     """
-    Check NVIDIA dGPU runtime PM state without waking the GPU.
-    Only query nvidia-smi if the GPU is already active.
+    Check NVIDIA dGPU runtime PM state via sysfs ONLY.
+    IMPORTANT: Never call nvidia-smi in a polling loop, as nvidia-smi resets the
+    kernel runtime PM autosuspend timer and prevents the GPU from entering D3cold (0W)!
     """
     pm_path = "/sys/bus/pci/devices/0000:01:00.0/power/runtime_status"
     pm_state = "unknown"
@@ -104,16 +105,7 @@ def get_dgpu_status_and_watts() -> tuple[str, float]:
     if pm_state == "suspended":
         return "suspended", 0.0
 
-    # If active, query nvidia-smi for exact watts
-    try:
-        out = subprocess.check_output(
-            ["nvidia-smi", "--query-gpu=power.draw", "--format=csv,noheader,nounits"],
-            stderr=subprocess.DEVNULL,
-            timeout=1.0
-        ).decode().strip()
-        return "active", float(out)
-    except Exception:
-        return pm_state, 12.0 if pm_state == "active" else 0.0
+    return pm_state, 10.0 if pm_state == "active" else 0.0
 
 
 def get_backlight_ratio() -> float:
