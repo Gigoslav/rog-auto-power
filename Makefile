@@ -36,6 +36,7 @@ install:
 	install -Dm644 AUTHORS "$(DESTDIR)$(DOCDIR)/AUTHORS"
 	install -Dm644 CHANGELOG.md "$(DESTDIR)$(DOCDIR)/CHANGELOG.md"
 	install -Dm644 README.md "$(DESTDIR)$(DOCDIR)/README.md"
+	install -Dm644 README.de.md "$(DESTDIR)$(DOCDIR)/README.de.md"
 
 uninstall:
 	rm -f "$(DESTDIR)$(BINDIR)/auto-power-profile.py"

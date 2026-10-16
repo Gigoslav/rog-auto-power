@@ -50,74 +50,90 @@ LANG = detect_language()
 
 I18N = {
     "de": {
-        "bat_label": "Battery (Akkubetrieb)",
+        "bat_label": "Akkubetrieb",
         "bat_title": "⚡ Akkubetrieb aktiviert",
-        "bat_msg": "Power-Saver | 60 Hz | 50% Helligkeit | Eco-Tuning",
+        "bat_msg": "Stromsparmodus | 60 Hz | 50% Helligkeit | Eco-Modus",
         "usbc_label": "USB-C PD (Ladebetrieb)",
         "usbc_title": "🔌 USB-C Laden aktiviert",
-        "usbc_msg": "Balanced | 60 Hz | 75% Helligkeit",
-        "ac_label": "AC 240W (Netzbetrieb)",
+        "usbc_msg": "Ausgeglichen | 60 Hz | 75% Helligkeit",
+        "ac_label": "Netzteil 240W (Netzbetrieb)",
         "ac_title": "🚀 Netzbetrieb (240W) aktiviert",
-        "ac_msg": "Performance | 240 Hz | 100% Helligkeit",
-        "menu_header": "⚡ Live Energie-Bilanz",
+        "ac_msg": "Höchstleistung | 240 Hz | 100% Helligkeit",
+        "menu_header": "⚡ Aktuelle Energie-Bilanz",
         "auto_mode": "🔄 Automatik-Modus",
         "manual_title": "⚙️ Manuelles Profil",
+        "menu_ps": "🌱 Stromsparmodus + 60 Hz",
+        "menu_bal": "⚖️ Ausgeglichen + 60 Hz",
+        "menu_perf": "🚀 Höchstleistung + 240 Hz",
         "gpu_active": "⚡ Aktiv",
+        "gpu_sleep": "💤 0W Schlafmodus",
         "gpu_mux_nv_title": "🎮 GPU-Umschaltung (MUX -> NVIDIA)",
-        "gpu_mux_nv_msg": "MUX-Switch für nächsten Neustart auf Dedicated NVIDIA gestellt. Bitte neu starten!",
+        "gpu_mux_nv_msg": "Hardware-MUX für nächsten Neustart auf dedizierte NVIDIA gestellt. Bitte neu starten!",
         "gpu_mux_prep_title": "🎮 GPU-Umschaltung (MUX -> {mode})",
-        "gpu_mux_prep_msg": "MUX-Switch auf {mode} vorbereitet. Bitte Laptop einmal neu starten!",
+        "gpu_mux_prep_msg": "Hardware-MUX auf {mode} vorbereitet. Bitte Laptop einmal neu starten!",
         "gpu_super_title": "🎮 GPU-Umschaltung (supergfxctl)",
         "gpu_super_msg": "GPU-Modus '{mode}' gesetzt. Bitte einmal ab- und wieder anmelden!",
         "gpu_err_title": "⚠️ GPU-Umschaltung Fehler",
-        "gpu_int_menu": "🔋 GPU: Integrated (Nur AMD, 0W NVIDIA)",
-        "gpu_hyb_menu": "⚡ GPU: Hybrid (AMD + NVIDIA für Games)",
-        "gpu_ded_menu": "🔥 GPU: AsusMuxDgpu (MUX Direkt NVIDIA)",
+        "gpu_int_menu": "🔋 GPU: Integriert (Nur AMD, 0W NVIDIA)",
+        "gpu_hyb_menu": "⚡ GPU: Hybrid (AMD + NVIDIA für Spiele)",
+        "gpu_ded_menu": "🔥 GPU: Dediziert (MUX Direkt NVIDIA)",
         "bat_prot_title": "🛡️ Akku-Schutzmodus",
         "bat_prot_msg": "{label} aktiviert (Lade-Limit: {limit}%)",
         "bat_prot_err": "⚠️ Akku-Schutz Fehler",
-        "stop_now_msg": "Laden sofort gestoppt (0.0 C Bypass bei {cap}%)",
-        "menu_lim_stop": "⏸️ Laden sofort stoppen (0.0 C Bypass)",
+        "stop_now_msg": "Laden sofort gestoppt (0.0 C Direktbetrieb bei {cap}%)",
+        "menu_lim_stop": "⏸️ Laden sofort stoppen (0.0 C Direktbetrieb)",
         "menu_lim_60": "🛡️ Ultra-Schutz: Max 60% (Schreibtisch)",
         "menu_lim_80": "⚖️ Standard-Schutz: Max 80% (Alltag)",
-        "menu_lim_100": "🎒 Reise-Modus: Max 100% (Voll)",
+        "menu_lim_100": "🎒 Reise-Modus: Max 100% (Vollladung)",
         "lbl_lim_60": "Ultra-Schutz (60%)",
         "lbl_lim_80": "Standard-Schutz (80%)",
         "lbl_lim_100": "Reise-Modus (100%)",
         "eta_to_limit": "~{h:.1f}h bis {limit}%",
         "eta_almost": "Fast {limit}%",
-        "eta_rem": "~{h:.1f}h Rest",
+        "eta_rem": "~{h:.1f}h Restlaufzeit",
         "no_charger": "Kein Netzteil",
-        "line_in": "🔌 Gesamt IN:   {total_in:5.1f} W  [{src_label}{usbc_extra}]",
-        "line_in_none": "🔌 Gesamt IN:     0.0 W  [Kein Netzteil]",
-        "line_bat_chg": "├── 🔋 Akku:   +{bat_w:5.1f} W  ({c_rate:.2f} C • Lädt • {cap}%/{limit}% • {eta})",
-        "line_bat_dis": "├── 🔋 Akku:   -{bat_w:5.1f} W  ({c_rate:.2f} C • Entlädt • {cap}% • {eta})",
-        "line_bat_byp": "├── 🔋 Akku:      0.0 W  (0.00 C • {cap}% • Bypass bei {limit}% Limit)",
-        "line_sys_run": "└── 💻 System:  {sys_w:5.1f} W  (Laufender Betrieb)",
-        "line_sys_bat": "└── 💻 System:  {sys_w:5.1f} W  (Aus dem Akku)",
-        "line_sys_ac": "└── 💻 System:  {sys_w:5.1f} W  (Direkt vom Netzteil)",
-        "line_detail": "       ↳ CPU/iGPU: {apu_w:.1f}W | RTX 3060: {dgpu_w:.1f}W | Display/Rest: {rest_w:.1f}W",
+        "line_in": "🔌 Eingang Gesamt:{total_in:5.1f} W  [{src_label}{usbc_extra}]",
+        "line_in_none": "🔌 Eingang Gesamt:  0.0 W  [Kein Netzteil]",
+        "line_bat_chg": "├── 🔋 Akku:     +{bat_w:5.1f} W  ({c_rate:.2f} C • Lädt • {cap}%/{limit}% • {eta})",
+        "line_bat_dis": "├── 🔋 Akku:     -{bat_w:5.1f} W  ({c_rate:.2f} C • Entlädt • {cap}% • {eta})",
+        "line_bat_byp": "├── 🔋 Akku:        0.0 W  (0.00 C • {cap}% • Direktbetrieb bei {limit}% Limit)",
+        "line_sys_run": "└── 💻 System:    {sys_w:5.1f} W  (Laufender Betrieb)",
+        "line_sys_bat": "└── 💻 System:    {sys_w:5.1f} W  (Aus dem Akku)",
+        "line_sys_ac": "└── 💻 System:    {sys_w:5.1f} W  (Direkt vom Netzteil)",
+        "line_detail": "       ↳ CPU/iGPU: {apu_w:.1f}W | RTX 3060: {dgpu_w:.1f}W | Bildschirm/Mainboard: {rest_w:.1f}W",
         "menu_profile": "⚙️ Profil: {prof} | {panel} @ {rate}",
         "menu_gpu": "🎮 GPU-Modus: {gpu}",
         "menu_bat_prot": "🛡️ Akku-Schutz: Limit {limit}% ({c_rate:.2f} C)",
-        "tt_header": "⚡ Energie-Bilanz (Live)",
-        "tt_limit": "🛡️ Akku-Limit: {limit}% | Rate: {c_rate:.2f} C",
-        "tt_profile": "⚙️ Profil: {prof} | Display: {rate}",
+        "tt_header": "⚡ Energie-Bilanz (Echtzeit)",
+        "tt_limit": "🛡️ Akku-Limit: {limit}% | Laderate: {c_rate:.2f} C",
+        "tt_profile": "⚙️ Profil: {prof} | Bildschirm: {rate}",
         "tt_gpu": "🎮 GPU: {gpu}",
-        "cli_header": "=== AutoPower & Energie-Bilanz ===",
+        "cli_header": "=== ROG Auto-Power & Energie-Bilanz ===",
         "cli_source": "Stromquelle:     {label}",
-        "cli_total_in": "Gesamt IN:       {w:.2f} W",
-        "cli_bat": "├── Davon Akku:  {sign}{w:.2f} W ({c:.2f} C) [{st}] (Akku: {cap}% / Limit: {lim}%)",
-        "cli_sys": "└── Davon System:{w:6.2f} W (CPU/iGPU: {apu:.1f}W | RTX 3060: {dgpu:.1f}W [{dst}] | Display/Board: {rest:.1f}W)",
+        "cli_total_in": "Eingang Gesamt:  {w:.2f} W",
+        "cli_bat": "├── Davon Akku:  {sign}{w:.2f} W ({c:.2f} C) [{st}] (Stand: {cap}% / Limit: {lim}%)",
+        "cli_sys": "└── Davon System:{w:6.2f} W (CPU/iGPU: {apu:.1f}W | RTX 3060: {dgpu:.1f}W [{dst}] | Bildschirm/Mainboard: {rest:.1f}W)",
         "cli_prof": "Aktives Profil:  {prof}",
+        "cli_panel": "Bildschirm:      {panel} ({res}) @ {rate} Hz",
         "menu_about": "ℹ️ Über & Credits (v{ver} • Gigoslav)",
         "about_title": "⚡ ROG Auto-Power v{ver}",
         "about_msg": "Entwickelt von {author} • Lizenz: {lic} • {url}",
+        "ver_free": "Dies ist freie Software: Sie können sie unter den Bedingungen der GPLv3+ ändern und weitergeben.",
+        "ver_attr": "Autoren-Credits und Copyright-Hinweise müssen in allen Kopien und Ableitungen erhalten bleiben.",
+        "prof_power-saver": "Stromsparmodus",
+        "prof_balanced": "Ausgeglichen",
+        "prof_performance": "Höchstleistung",
+        "st_Charging": "Lädt",
+        "st_Discharging": "Entlädt",
+        "st_Not charging": "Direktbetrieb / Lädt nicht",
+        "st_Full": "Voll",
+        "dst_suspended": "Schlafmodus",
+        "dst_active": "Aktiv",
     },
     "en": {
         "bat_label": "Battery (Unplugged)",
         "bat_title": "⚡ Battery Mode Activated",
-        "bat_msg": "Power-Saver | 60 Hz | 50% Brightness | Eco-Tuning",
+        "bat_msg": "Power-Saver | 60 Hz | 50% Brightness | Eco-Mode",
         "usbc_label": "USB-C PD (Charging)",
         "usbc_title": "🔌 USB-C Charging Activated",
         "usbc_msg": "Balanced | 60 Hz | 75% Brightness",
@@ -127,7 +143,11 @@ I18N = {
         "menu_header": "⚡ Live Energy Balance",
         "auto_mode": "🔄 Automatic Mode",
         "manual_title": "⚙️ Manual Profile",
+        "menu_ps": "🌱 Power-Saver + 60 Hz",
+        "menu_bal": "⚖️ Balanced + 60 Hz",
+        "menu_perf": "🚀 Performance + 240 Hz",
         "gpu_active": "⚡ Active",
+        "gpu_sleep": "💤 0W Suspended",
         "gpu_mux_nv_title": "🎮 GPU Switch (MUX -> NVIDIA)",
         "gpu_mux_nv_msg": "Hardware MUX set to Dedicated NVIDIA for next boot. Please reboot!",
         "gpu_mux_prep_title": "🎮 GPU Switch (MUX -> {mode})",
@@ -137,7 +157,7 @@ I18N = {
         "gpu_err_title": "⚠️ GPU Switch Error",
         "gpu_int_menu": "🔋 GPU: Integrated (AMD Only, 0W NVIDIA)",
         "gpu_hyb_menu": "⚡ GPU: Hybrid (AMD + NVIDIA for Games)",
-        "gpu_ded_menu": "🔥 GPU: AsusMuxDgpu (Direct NVIDIA MUX)",
+        "gpu_ded_menu": "🔥 GPU: Dedicated (Direct NVIDIA MUX)",
         "bat_prot_title": "🛡️ Battery Protection Mode",
         "bat_prot_msg": "{label} enabled (Charge Limit: {limit}%)",
         "bat_prot_err": "⚠️ Battery Protection Error",
@@ -151,7 +171,7 @@ I18N = {
         "lbl_lim_100": "Travel Mode (100%)",
         "eta_to_limit": "~{h:.1f}h to {limit}%",
         "eta_almost": "Almost {limit}%",
-        "eta_rem": "~{h:.1f}h left",
+        "eta_rem": "~{h:.1f}h remaining",
         "no_charger": "Unplugged",
         "line_in": "🔌 Total IN:    {total_in:5.1f} W  [{src_label}{usbc_extra}]",
         "line_in_none": "🔌 Total IN:      0.0 W  [Unplugged]",
@@ -169,15 +189,27 @@ I18N = {
         "tt_limit": "🛡️ Charge Limit: {limit}% | Rate: {c_rate:.2f} C",
         "tt_profile": "⚙️ Profile: {prof} | Display: {rate}",
         "tt_gpu": "🎮 GPU: {gpu}",
-        "cli_header": "=== AutoPower & Energy Balance ===",
+        "cli_header": "=== ROG Auto-Power & Energy Balance ===",
         "cli_source": "Power Source:    {label}",
         "cli_total_in": "Total IN:        {w:.2f} W",
         "cli_bat": "├── Battery:     {sign}{w:.2f} W ({c:.2f} C) [{st}] (Level: {cap}% / Limit: {lim}%)",
         "cli_sys": "└── System Load: {w:6.2f} W (CPU/iGPU: {apu:.1f}W | RTX 3060: {dgpu:.1f}W [{dst}] | Display/Board: {rest:.1f}W)",
         "cli_prof": "Active Profile:  {prof}",
+        "cli_panel": "Display:         {panel} ({res}) @ {rate} Hz",
         "menu_about": "ℹ️ About & Credits (v{ver} • Gigoslav)",
         "about_title": "⚡ ROG Auto-Power v{ver}",
         "about_msg": "Created by {author} • License: {lic} • {url}",
+        "ver_free": "This is free software: you are free to change and redistribute it under the terms of the GPLv3+.",
+        "ver_attr": "Author attribution and copyright notices must be preserved in all copies and derivatives.",
+        "prof_power-saver": "Power-Saver",
+        "prof_balanced": "Balanced",
+        "prof_performance": "Performance",
+        "st_Charging": "Charging",
+        "st_Discharging": "Discharging",
+        "st_Not charging": "Not charging (AC Bypass)",
+        "st_Full": "Full",
+        "dst_suspended": "suspended",
+        "dst_active": "active",
     },
 }
 
@@ -737,18 +769,18 @@ def run_gui_daemon(controller: PowerManagerController):
         set_display_refresh_rate(hz)
         controller.cached_profile = get_current_power_profile()
         controller.cached_panel = get_panel_info()
-        send_notification(tr("manual_title"), f"{prof} | {hz} Hz")
+        send_notification(tr("manual_title"), f"{tr(f'prof_{prof}')} | {hz} Hz")
         update_tray()
 
-    act_ps = QAction("🌱 Power-Saver + 60 Hz", menu)
+    act_ps = QAction(tr("menu_ps"), menu)
     act_ps.triggered.connect(lambda: manual_set("power-saver", 60))
     menu.addAction(act_ps)
 
-    act_bal = QAction("⚖️ Balanced + 60 Hz", menu)
+    act_bal = QAction(tr("menu_bal"), menu)
     act_bal.triggered.connect(lambda: manual_set("balanced", 60))
     menu.addAction(act_bal)
 
-    act_perf = QAction("🚀 Performance + 240 Hz", menu)
+    act_perf = QAction(tr("menu_perf"), menu)
     act_perf.triggered.connect(lambda: manual_set("performance", 240))
     menu.addAction(act_perf)
 
@@ -768,7 +800,7 @@ def run_gui_daemon(controller: PowerManagerController):
                 with open(pm_path, "r") as f:
                     pm = f.read().strip()
                 if pm == "suspended":
-                    return f"{res} (RTX 3060: 💤 0W)"
+                    return f"{res} (RTX 3060: {tr('gpu_sleep')})"
                 elif pm == "active":
                     return f"{res} (RTX 3060: {tr('gpu_active')})"
             except Exception:
@@ -867,6 +899,7 @@ def run_gui_daemon(controller: PowerManagerController):
             cached_gpu_mode = get_gpu_mode()
 
         prof = controller.cached_profile
+        prof_disp = tr(f"prof_{prof}")
         panel_name, _, rate, _ = controller.cached_panel
         rate_val = rate if rate else 60.0
         rate_str = f"{int(rate_val)} Hz"
@@ -912,7 +945,7 @@ def run_gui_daemon(controller: PowerManagerController):
         act_bat.setText(line_bat)
         act_sys.setText(line_sys)
         act_sys_detail.setText(line_detail)
-        act_state.setText(tr("menu_profile", prof=prof, panel=panel_name, rate=rate_str))
+        act_state.setText(tr("menu_profile", prof=prof_disp, panel=panel_name, rate=rate_str))
         act_gpu_status.setText(tr("menu_gpu", gpu=cached_gpu_mode))
         act_bat_prot.setText(tr("menu_bat_prot", limit=limit, c_rate=c_rate))
 
@@ -924,7 +957,7 @@ def run_gui_daemon(controller: PowerManagerController):
             f"{line_detail}\n"
             f"──────────────────────────\n"
             f"{tr('tt_limit', limit=limit, c_rate=c_rate)}\n"
-            f"{tr('tt_profile', prof=prof, rate=rate_str)}\n"
+            f"{tr('tt_profile', prof=prof_disp, rate=rate_str)}\n"
             f"{tr('tt_gpu', gpu=cached_gpu_mode)}"
         )
         tray.setToolTip(tooltip)
@@ -976,24 +1009,27 @@ def main():
         print(f"Copyright (C) 2026 {APP_AUTHOR} <{APP_EMAIL}>")
         print(f"License: {APP_LICENSE} <https://www.gnu.org/licenses/gpl-3.0.html>")
         print(f"Repository: {APP_URL}")
-        print("This is free software: you are free to change and redistribute it under the terms of the GPLv3+.")
-        print("Author attribution and copyright notices must be preserved in all copies and derivatives.")
+        print(tr("ver_free"))
+        print(tr("ver_attr"))
         return
 
     if args.status:
         src = get_power_source()
         cfg = get_state_config()[src]
         current_prof = get_current_power_profile()
+        prof_disp = tr(f"prof_{current_prof}")
         panel_name, current_res, current_rate, available_rates = get_panel_info()
         tel = get_power_telemetry(current_rate or 60.0)
+        st_disp = tr(f"st_{tel['status']}")
+        dst_disp = tr(f"dst_{tel['dgpu_state']}")
         sign = "+" if tel["status"] == "Charging" else ("-" if tel["status"] == "Discharging" else "")
         print(tr("cli_header"))
         print(tr("cli_source", label=cfg["label"]))
         print(tr("cli_total_in", w=tel["total_in_watts"]))
-        print(tr("cli_bat", sign=sign, w=tel["bat_watts"], c=tel["c_rate"], st=tel["status"], cap=tel["capacity"], lim=tel["charge_limit"]))
-        print(tr("cli_sys", w=tel["sys_watts"], apu=tel["apu_watts"], dgpu=tel["dgpu_watts"], dst=tel["dgpu_state"], rest=tel["rest_watts"]))
-        print(tr("cli_prof", prof=current_prof))
-        print(f"Panel:           {panel_name} ({current_res}) @ {current_rate} Hz")
+        print(tr("cli_bat", sign=sign, w=tel["bat_watts"], c=tel["c_rate"], st=st_disp, cap=tel["capacity"], lim=tel["charge_limit"]))
+        print(tr("cli_sys", w=tel["sys_watts"], apu=tel["apu_watts"], dgpu=tel["dgpu_watts"], dst=dst_disp, rest=tel["rest_watts"]))
+        print(tr("cli_prof", prof=prof_disp))
+        print(tr("cli_panel", panel=panel_name, res=current_res, rate=current_rate))
         return
 
     controller = PowerManagerController()

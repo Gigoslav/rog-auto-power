@@ -1,5 +1,7 @@
 # ⚡ ROG Auto-Power & Live Watt Tray Indicator (`rog-auto-power`)
 
+🇬🇧 **English** | 🇩🇪 **[Deutsch](README.de.md)**
+
 [![License: GPL v3+](https://img.shields.io/badge/License-GPLv3%2B-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Version](https://img.shields.io/badge/version-0.1.2-brightgreen.svg)](https://github.com/Gigoslav/rog-auto-power/releases)
 [![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20Arch%20%7C%20KDE%20Plasma%206-informational.svg)](https://github.com/Gigoslav/rog-auto-power)
@@ -26,6 +28,14 @@ Automatically detects your system language (**English `en`** and **German `de`**
      * **Charging (Green):** Top line shows **`Total IN`** (`89W`), bottom line shows **`+Battery|System`** (`+64|25`).
      * **Discharging (Amber/Red):** Top line shows **`-SystemW`** (`-12W`), bottom line shows **`OUT`**.
      * **Bypass / Limit Reached (Blue):** Top line shows **`SystemW`**, bottom line shows **`0|SystemW`**.
+   * **Detailed Tooltip & Context Menu:**
+     ```text
+     ⚡ Energy Balance (Live)
+     🔌 Total IN:     54.5 W  [USB-C PD (Charging) (Max 60W)]
+     ├── 🔋 Battery: +30.3 W  (0.38 C • Charging • 45%/80% • ~0.8h to 80%)
+     └── 💻 System:   24.2 W  (Active Load)
+            ↳ CPU/iGPU: 17.2W | RTX 3060: 0.0W | Display/Board: 7.0W
+     ```
    * **Zero-Wakeup NVIDIA `D3cold` Monitoring:** Reads AMD Ryzen APU Package Power (`PPT`) via `/sys/class/hwmon` (`amdgpu`) and checks NVIDIA RTX 3060 runtime sleep status via `/sys/bus/pci/devices/0000:01:00.0/power/runtime_status` **without ever calling `nvidia-smi`** (which would otherwise wake the dGPU from `D3cold` and waste ~10W).
 
 3. **Battery Protection & Live C-Rate Control**
@@ -36,7 +46,7 @@ Automatically detects your system language (**English `en`** and **German `de`**
 4. **Integrated GPU & Hardware MUX Switcher**
    * **🔋 Integrated:** AMD Radeon 680M only (`0.0 W` NVIDIA).
    * **⚡ Hybrid:** AMD Radeon 680M for desktop + NVIDIA RTX 3060 on-demand (`prime-run`), sleeping at `0.0 W` (`suspended`) when idle.
-   * **🔥 AsusMuxDgpu:** Hardware MUX switch (`gpu_mux_mode = 0`) routing internal display directly to the NVIDIA RTX 3060.
+   * **🔥 Dedicated (`AsusMuxDgpu`):** Hardware MUX switch (`gpu_mux_mode = 0`) routing internal display directly to the NVIDIA RTX 3060.
 
 ---
 
