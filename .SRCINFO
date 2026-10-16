@@ -1,0 +1,20 @@
+pkgbase = rog-auto-power-git
+	pkgdesc = ASUS ROG Strix 3-state auto power profile, 60/240Hz switcher, live Wattage (IN/Battery/System) KDE tray badge & GPU/MUX switcher
+	pkgver = 1.0.0
+	pkgrel = 1
+	url = https://github.com/Gigoslav/rog-auto-power
+	arch = any
+	license = MIT
+	makedepends = git
+	depends = python
+	depends = python-pyqt6
+	depends = python-dbus
+	depends = power-profiles-daemon
+	depends = libnotify
+	optdepends = supergfxctl: GPU mode switching (Integrated / Hybrid / AsusMuxDgpu)
+	optdepends = kscreen: Wayland/X11 display refresh rate switching via kscreen-doctor
+	optdepends = xorg-xrandr: X11 fallback refresh rate switching
+	source = git+https://github.com/Gigoslav/rog-auto-power.git
+	sha256sums = SKIP
+
+pkgname = rog-auto-power-git
