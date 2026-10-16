@@ -1,6 +1,6 @@
 # Maintainer: Marcel Berghaus <berghaus.marcel@gmail.com>
 pkgname=rog-auto-power-git
-pkgver=0.1.0
+pkgver=0.1.1
 pkgrel=1
 pkgdesc="ASUS ROG Strix 3-state auto power profile, 60/240Hz switcher, live Wattage (IN/Battery/System) KDE tray badge & GPU/MUX switcher"
 arch=('any')
