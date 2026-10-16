@@ -1,6 +1,6 @@
 pkgbase = rog-auto-power-git
 	pkgdesc = ASUS ROG Strix 3-state auto power profile, 60/240Hz switcher, live Wattage (IN/Battery/System) KDE tray badge & GPU/MUX switcher
-	pkgver = 1.0.0
+	pkgver = 0.1.0
 	pkgrel = 1
 	url = https://github.com/Gigoslav/rog-auto-power
 	arch = any
